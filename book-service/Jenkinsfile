@@ -1,5 +1,7 @@
 pipeline {
     agent any
+	
+	 tools { maven 'M3' }
 
     environment {
         APP_NAME = "book_service"
