@@ -6,8 +6,9 @@ pipeline {
     environment {
         APP_NAME = "book_service"
         IMAGE_TAG = "latest"
-        LOCAL_IMAGE_DIR = "~/container_image"
-        CUSTOM_WORKSPACE = "~/REST_Service/"
+        LOCAL_IMAGE_DIR = "${HOME}/container_image"
+        CUSTOM_WORKSPACE = "${HOME}/REST_Service"
+
     }
 
     stages {
@@ -36,11 +37,10 @@ pipeline {
 
         stage('Build Container Image') {
             steps {
-                dir("${CUSTOM_WORKSPACE}") {
-                    sh """
-                        docker build -t ${APP_NAME}:${IMAGE_TAG} .
-                    """
-                }
+               dir("${CUSTOM_WORKSPACE}/book_service_project/book-service") {
+               sh "docker build -t ${APP_NAME}:${IMAGE_TAG} ."
+        }
+
             }
         }
 
