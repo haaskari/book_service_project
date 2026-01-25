@@ -38,7 +38,7 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                dir("${CUSTOM_WORKSPACE}/book-service") {
+                dir("/var/lib/jenkins/REST_Service/book-service") {
                     sh 'mvn clean package -DskipTests'
                 }
             }
