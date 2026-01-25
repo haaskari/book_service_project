@@ -27,10 +27,18 @@ pipeline {
                 }
             }
         }
+		
+		stage('Debug Workspace') {
+           steps {
+              sh "echo '--- WORKSPACE CONTENT ---'"
+              sh "ls -R ${CUSTOM_WORKSPACE}"
+            }
+        }
+
 
         stage('Build with Maven') {
             steps {
-                dir("${CUSTOM_WORKSPACE}") {
+                dir("${CUSTOM_WORKSPACE}/book-service") {
                     sh 'mvn clean package -DskipTests'
                 }
             }
