@@ -1,0 +1,4 @@
+com\example\book\BookRepository.class
+com\example\book\Book.class
+com\example\book\BookResource.class
+com\example\book\JaxRsConfig.class
