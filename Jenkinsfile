@@ -1,0 +1,63 @@
+pipeline {
+    agent any
+    
+    tools { 
+        maven 'M3' 
+    }
+
+    environment {
+        APP_NAME = "book_service"
+        IMAGE_TAG = "latest"
+        LOCAL_IMAGE_DIR = "${HOME}/container_image"
+        CUSTOM_WORKSPACE = "${HOME}/REST_Service"
+    }
+
+    stages {
+
+        stage('Prepare Workspace') {
+            steps {
+                sh "mkdir -p ${CUSTOM_WORKSPACE}"
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                dir("${CUSTOM_WORKSPACE}") {
+                    git url: 'https://github.com/haaskari/book_service_project.git', branch: 'main'
+                }
+            }
+        }
+
+        stage('Debug Workspace') {
+            steps {
+                sh "echo '--- WORKSPACE CONTENT ---'"
+                sh "ls -R ${CUSTOM_WORKSPACE}"
+            }
+        }
+
+        stage('Build with Maven') {
+            steps {
+                dir("${CUSTOM_WORKSPACE}/book-service") {
+                    sh 'mvn clean package -DskipTests'
+                }
+            }
+        }
+
+        stage('Build Container Image') {
+            steps {
+                dir("${CUSTOM_WORKSPACE}/book-service") {
+                    sh "docker build -t ${APP_NAME}:${IMAGE_TAG} ."
+                }
+            }
+        }
+
+        stage('Save Image Locally') {
+            steps {
+                sh """
+                    mkdir -p ${LOCAL_IMAGE_DIR}
+                    docker save ${APP_NAME}:${IMAGE_TAG} -o ${LOCAL_IMAGE_DIR}/${APP_NAME}_${IMAGE_TAG}.tar
+                """
+            }
+        }
+    }
+}
