@@ -62,6 +62,6 @@ public class BookResource {
     @GET
     @Path("/test")
     public String test() {
-    return "OK";
+    return "OK and bye";
     }
 }
